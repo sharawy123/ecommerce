@@ -7,7 +7,10 @@ import 'package:ecommerce/core/routes/routes.dart';
 import 'package:ecommerce/core/utils/validator.dart';
 import 'package:ecommerce/core/widgets/custom_elevated_button.dart';
 import 'package:ecommerce/core/widgets/custom_text_field.dart';
+import 'package:ecommerce/features/auth/data/models/register/RegisterRequest.dart';
+import 'package:ecommerce/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -93,7 +96,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Center(
                     child: SizedBox(
                       height: Sizes.s60.h,
-                      width: MediaQuery.sizeOf(context).width * .9,
+                      width: MediaQuery
+                          .sizeOf(context)
+                          .width * .9,
                       child: CustomElevatedButton(
                         label: 'Register',
                         backgroundColor: ColorManager.white,
@@ -103,7 +108,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           fontSize: FontSize.s20,
                         ),
                         onTap: () {
-                          if (_formKey.currentState!.validate()) {}
+                          if (_formKey.currentState!.validate()) {
+                            context.read<AuthCubit>().register(RegisterRequest(
+                                name: _nameController.text,
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                                phone: _phoneController.text,),);
+                          }
                         },
                       ),
                     ),
@@ -123,8 +134,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         width: Sizes.s8.w,
                       ),
                       GestureDetector(
-                        onTap: () => Navigator.of(context)
-                            .pushReplacementNamed(Routes.login),
+                        onTap: () =>
+                            Navigator.of(context)
+                                .pushReplacementNamed(Routes.login),
                         child: Text(
                           'Login',
                           style: getSemiBoldStyle(color: ColorManager.white)
