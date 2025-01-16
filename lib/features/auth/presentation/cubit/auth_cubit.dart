@@ -3,26 +3,29 @@ import 'package:ecommerce/features/auth/data/models/register/RegisterRequest.dar
 import 'package:ecommerce/features/auth/data/repositories/impl_auth_repository.dart';
 import 'package:ecommerce/features/auth/presentation/cubit/auth_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
- // viewModel
-class AuthCubit  extends Cubit <AuthStates>{
-  AuthCubit() : super(AuthInitState());
-  final _authRepo = ImplAuthRepository();
-  Future <void>register(RegisterRequest request)async{
+import 'package:injectable/injectable.dart';
+
+// viewModel
+@singleton
+class AuthCubit extends Cubit<AuthStates> {
+  AuthCubit(this._authRepo) : super(AuthInitState());
+  final  ImplAuthRepository _authRepo ;
+
+  Future<void> register(RegisterRequest request) async {
     emit(RegisterLoading());
-    try{
-      await _authRepo.register(request);
-      emit(RegisterSuccess());
-    }catch(e){
-    emit(RegisterError(e.toString()));
-    }
+    final result = await _authRepo.register(request);
+    result.fold(
+      (failure) => emit(RegisterError(failure.message)),
+      (_) => emit(RegisterSuccess()),
+    );
   }
-  Future <void>login(LoginRequest request)async{
+
+  Future<void> login(LoginRequest request) async {
     emit(LoginLoading());
-    try{
-      await _authRepo.login(request);
-      emit(LoginSuccess());
-    }catch(e){
-      emit(LoginError(e.toString()));
-    }
+    final result = await _authRepo.login(request);
+    result.fold(
+      (failure) => emit(LoginError(failure.message)),
+      (_) => emit(LoginSuccess()),
+    );
   }
 }

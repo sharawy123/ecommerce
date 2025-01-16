@@ -4,11 +4,13 @@ import 'package:ecommerce/core/resources/font_manager.dart';
 import 'package:ecommerce/core/resources/styles_manager.dart';
 import 'package:ecommerce/core/resources/values_manager.dart';
 import 'package:ecommerce/core/routes/routes.dart';
+import 'package:ecommerce/core/utils/ui_utils.dart';
 import 'package:ecommerce/core/utils/validator.dart';
 import 'package:ecommerce/core/widgets/custom_elevated_button.dart';
 import 'package:ecommerce/core/widgets/custom_text_field.dart';
 import 'package:ecommerce/features/auth/data/models/register/RegisterRequest.dart';
 import 'package:ecommerce/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:ecommerce/features/auth/presentation/cubit/auth_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -99,23 +101,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       width: MediaQuery
                           .sizeOf(context)
                           .width * .9,
-                      child: CustomElevatedButton(
-                        label: 'Register',
-                        backgroundColor: ColorManager.white,
-                        isStadiumBorder: false,
-                        textStyle: getBoldStyle(
-                          color: ColorManager.primary,
-                          fontSize: FontSize.s20,
-                        ),
-                        onTap: () {
-                          if (_formKey.currentState!.validate()) {
-                            context.read<AuthCubit>().register(RegisterRequest(
-                                name: _nameController.text,
-                                email: _emailController.text,
-                                password: _passwordController.text,
-                                phone: _phoneController.text,),);
+                      child: BlocListener <AuthCubit,AuthStates>(
+                        listener: (_, state) {
+                          if(state is RegisterLoading){
+                            UIUtils.showLoading(context);
+                          }
+                          else if(state is RegisterSuccess){
+                            UIUtils.hideLoading(context);
+                            Navigator.of(context).pushReplacementNamed(Routes.login);
+                          }
+                          else if(state is RegisterError){
+                            UIUtils.hideLoading(context);
+                            UIUtils.showMessage(state.message);
                           }
                         },
+                        child: CustomElevatedButton(
+                          label: 'Register',
+                          backgroundColor: ColorManager.white,
+                          isStadiumBorder: false,
+                          textStyle: getBoldStyle(
+                            color: ColorManager.primary,
+                            fontSize: FontSize.s20,
+                          ),
+                          onTap: () {
+                            if (_formKey.currentState!.validate()) {
+                              context.read<AuthCubit>().register(RegisterRequest(
+                                  name: _nameController.text,
+                                  email: _emailController.text,
+                                  password: _passwordController.text,
+                                  phone: _phoneController.text,),);
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ),
