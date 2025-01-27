@@ -6,9 +6,9 @@ import '../../../../core/error/failure.dart';
 import '../entities/category.dart';
 
 @lazySingleton
-class GetGategories {
+class GetCategories {
   final HomeRepository _homeRepository;
-  GetGategories(this._homeRepository);
+  GetCategories(this._homeRepository);
 
   Future<Either<Failure, List<Category>>> call()=>_homeRepository.getCategories();
 }

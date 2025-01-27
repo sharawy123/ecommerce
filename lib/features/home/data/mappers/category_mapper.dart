@@ -1,5 +1,5 @@
-import 'package:ecommerce/features/home/data/models/category_model.dart';
 
+import '../../../../core/models/category_model.dart';
 import '../../domain/entities/category.dart';
 
 extension CategoryMapper on CategoryModel {
