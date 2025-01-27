@@ -1,5 +1,5 @@
-import 'category_model.dart';
-import 'meta_data.dart';
+import '../../../../core/models/category_model.dart';
+import '../../../../core/models/meta_data.dart';
 class CategoryResponse {
   final int results;
   final Metadata metadata;

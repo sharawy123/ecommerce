@@ -3,8 +3,8 @@ class CategoryModel {
   final String name;
   final String slug;
   final String image;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   CategoryModel({
     required this.id,
@@ -20,8 +20,8 @@ class CategoryModel {
     name: json["name"],
     slug: json["slug"],
     image: json["image"],
-    createdAt: DateTime.parse(json["createdAt"]),
-    updatedAt: DateTime.parse(json["updatedAt"]),
+    createdAt:json["createdAt"] ==null ? null :  DateTime.parse(json["createdAt"]),
+    updatedAt: json["updatedAt"] ==null ? null :  DateTime.parse(json["updatedAt"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -29,7 +29,7 @@ class CategoryModel {
     "name": name,
     "slug": slug,
     "image": image,
-    "createdAt": createdAt.toIso8601String(),
-    "updatedAt": updatedAt.toIso8601String(),
+    "createdAt": createdAt?.toIso8601String(),
+    "updatedAt": updatedAt?.toIso8601String(),
   };
 }

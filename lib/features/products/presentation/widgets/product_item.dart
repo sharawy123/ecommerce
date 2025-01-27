@@ -6,8 +6,12 @@ import 'package:ecommerce/core/widgets/heart_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../domain/entities/product.dart';
+
 class ProductItem extends StatelessWidget {
-  const ProductItem();
+  const ProductItem(this.product);
+
+  final Product product;
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +20,7 @@ class ProductItem extends StatelessWidget {
     return InkWell(
       onTap: () => Navigator.of(context).pushNamed(
         Routes.productDetails,
+        arguments: product
       ),
       child: Container(
         width: screenSize.width * 0.4,
@@ -39,8 +44,7 @@ class ProductItem extends StatelessWidget {
                     borderRadius:
                         BorderRadius.vertical(top: Radius.circular(14.r)),
                     child: CachedNetworkImage(
-                      imageUrl:
-                          'https://pl.kicksmaniac.com/zdjecia/2022/08/23/508/43/NIKE_AIR_JORDAN_1_RETRO_HIGH_GS_RARE_AIR_MAX_ORANGE-mini.jpg',
+                      imageUrl: product.imageCover,
                       width: screenSize.width,
                       fit: BoxFit.cover,
                     ),
@@ -62,7 +66,7 @@ class ProductItem extends StatelessWidget {
                   children: [
                     Text(
                       _truncateTitle(
-                        'Nike Air Jordon Nike shoes flexible for wo..',
+                        product.title,
                       ),
                       style: getMediumStyle(
                         color: ColorManager.text,
@@ -71,9 +75,7 @@ class ProductItem extends StatelessWidget {
                     ),
                     SizedBox(height: screenSize.height * 0.002),
                     Text(
-                      _truncateDescription(
-                        'Nike is a multinational corporation that designs, develops, and sells athletic footwear ,apparel, and accessories.',
-                      ),
+                      _truncateDescription(product.description),
                       style: getRegularStyle(
                         color: ColorManager.text,
                         fontSize: 14.sp,
@@ -86,15 +88,18 @@ class ProductItem extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'EGP 399',
+                            '${product.priceAfterDiscount ?? product.price}',
                             style: getRegularStyle(
                               color: ColorManager.text,
                               fontSize: 14.sp,
                             ),
                           ),
-                          Text(
-                            '499',
-                            style: getTextWithLine(),
+                          Visibility(
+                            visible: product.priceAfterDiscount!=null,
+                            child: Text(
+                              '${product.price}',
+                              style: getTextWithLine(),
+                            ),
                           ),
                         ],
                       ),
@@ -107,7 +112,7 @@ class ProductItem extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Review (4.8)',
+                                'Review ${product.ratingsAverage}',
                                 style: getRegularStyle(
                                   color: ColorManager.text,
                                   fontSize: 12.sp,
