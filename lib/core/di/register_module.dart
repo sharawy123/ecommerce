@@ -10,7 +10,16 @@ abstract class RegisterModule {
       BaseOptions(
           baseUrl: APIConstants.baseUrl,
           receiveDataWhenStatusError: true,
-      ),);
+      ),)..interceptors.add(InterceptorsWrapper(
+    onRequest: (options,handler) async{
+      final sharedPref = await SharedPreferences.getInstance();
+     final token = sharedPref.getString(CachConstants.tokenKey);
+      if(token !=null) {
+        options.headers[APIConstants.tokenKey]=token;
+      }
+      return handler.next(options);
+    },
+  ),);
   @preResolve // if you need to pre resolve the value
-  Future<SharedPreferences> get prefs => SharedPreferences.getInstance();
+  Future <SharedPreferences> get prefs => SharedPreferences.getInstance();
 }

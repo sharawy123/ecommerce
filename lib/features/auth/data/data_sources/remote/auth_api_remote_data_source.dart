@@ -34,7 +34,7 @@ class AuthApiRemoteDataSource implements AuthRemoteDataSource {
   Future<RegisterResponse> register(RegisterRequest request) async {
     try{
       final response = await _dio.post(APIConstants.registerEndPoint,
-          data: request.toJson());
+          data: request.toJson(),);
       return RegisterResponse.fromJson(response.data);
     }catch(exception){
       String ? message;
